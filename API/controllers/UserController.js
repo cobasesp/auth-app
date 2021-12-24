@@ -1,16 +1,27 @@
 const sequelize = require("../db");
 const User = require('../models/UserModel');
 
-const res = require("express/lib/response")
+const login = async (req, res, next) => {
+    let email = req.body.email;
+    let password = req.body.password;
 
-const test = async (req, res) => {
     await sequelize.sync();
-    const user = await User.findAll({
-        attributes: ["id", "name", "email"],
+    const user = await User.findOne({
+        attributes: ["id", "name", "email", "bio", "phone", "photo"],
+        where: {
+            email: email,
+            password: password
+        }
     });
-    res.json({error: 0, data: user});
+
+    if(user === null){
+        res.json({error: true, msg: "User or password incorrect", data: []})
+    }else{
+        res.json({error: false, msg: "OK", data: user});
+    }
+    
 }
 
 module.exports = {
-    test
+    login
 }

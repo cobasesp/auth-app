@@ -2,10 +2,9 @@ const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/UserController');
 
-router.get('/test', (req, res) => {
-    res.json({"test": 'ok router'});
-})
+router.use(express.json()) // for parsing application/json
+router.use(express.urlencoded({ extended: true }))
 
-router.get('/login', (req, res) => UserController.test(req, res));
+router.post('/login', UserController.login);
 
 module.exports = router;
